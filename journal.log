@@ -1,0 +1,5 @@
+[2015-23-09 14:26:08] main.c:8:DEBUG: un message de DEBUG
+[2015-23-09 14:26:09] main.c:10:INFO: une INFO 1 seconde plus tard
+[2015-23-09 14:26:11] main.c:12:WARNING: un WARNING 2 secondes plus tard
+[2015-23-09 14:26:14] main.c:14:ERROR: une ERROR 3 secondes plus tard
+[2015-23-09 14:26:18] main.c:16:DEBUG: un DEBUG 4 secondes plus tard

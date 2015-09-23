@@ -5,7 +5,7 @@ override LDFLAGS+=-L.
 override LIBCFLAGS+=-shared -fPIC
 LDLIBS = -lc
 INCLUDE=lib
-SYMLINK?=ln -sf
+SYMLINK?=ln -sv
 LIBCFLAGS=-shared -fPIC
 LDFLAGS=-L.
 PROG=journal
@@ -21,13 +21,18 @@ REALNAME=$(SONAME)$(LIBMINOR)$(LIBPATCH)
 
 LIBSTATIC=lib$(LINKERNAME).a
 
-
-
-
 LIBOBJ=journal.o
+
+$(PROG): main.o $(LIBSTATIC) $(REALNAME) 
+	
+	$(CC) -o $@.static $< $(LDFLAGS) -l:$(LIBSTATIC)
+	$(CC) -o $@.shared $< $(LDFLAGS) -l$(LINKERNAME)
+	LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH ./$@.shared
+
 
 $(LIBOBJ):$(INCLUDE)/journal.c
 	$(CC) -c $^ $(CFLAGS)
+
 
 $(LIBSTATIC):$(LIBSTATIC)($(LIBOBJ))
 
@@ -36,9 +41,8 @@ $(REALNAME): $(LOBJ)
 	$(SYMLINK) $@ $(SONAME)
 	$(SYMLINK) $@ $(LINKERFILENAME)
 
-$(PROG): main.o $(LIBSTATIC) $(REALNAME) 
-	$(CC) -o $@.shared $< $(LDFLAGS) -l$(LINKERNAME)
-	LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH ./$@.shared
+
+
 
 libs:$(LIBSTATIC) $(REALNAME)
 
@@ -46,5 +50,5 @@ libs:$(LIBSTATIC) $(REALNAME)
 
 
 clean:
-	rm -f *.o *$(PROG)*
+	rm -f *.o *lib$(PROG)*
 
