@@ -27,8 +27,6 @@ $(PROG): main.o $(LIBSTATIC) $(REALNAME)
 	
 	$(CC) -o $@.static $< $(LDFLAGS) -l:$(LIBSTATIC)
 	touch $(PROG).log
-	#./$@.static
-	#cat $(PROG).log
 	$(CC) -o $@.shared $< $(LDFLAGS) -l$(LINKERNAME)
 	LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH ./$@.shared
 	cat $(PROG).log
@@ -41,7 +39,7 @@ $(LIBOBJ):$(INCLUDE)/journal.c
 
 $(LIBSTATIC):$(LIBSTATIC)($(LIBOBJ))
 
-$(REALNAME): $(LOBJ)
+$(REALNAME): $(LIBOBJ)
 	$(CC) $(LIBCFLAGS) -Wl,-soname,$(SONAME) -o $@ $^ $(LDLIBS)
 	$(SYMLINK) $@ $(SONAME)
 	$(SYMLINK) $@ $(LINKERFILENAME)
