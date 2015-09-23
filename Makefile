@@ -26,8 +26,13 @@ LIBOBJ=journal.o
 $(PROG): main.o $(LIBSTATIC) $(REALNAME) 
 	
 	$(CC) -o $@.static $< $(LDFLAGS) -l:$(LIBSTATIC)
+	touch $(PROG).log
+	#./$@.static
+	#cat $(PROG).log
 	$(CC) -o $@.shared $< $(LDFLAGS) -l$(LINKERNAME)
 	LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH ./$@.shared
+	cat $(PROG).log
+	rm -f *.o *$(PROG)*
 
 
 $(LIBOBJ):$(INCLUDE)/journal.c
@@ -50,5 +55,5 @@ libs:$(LIBSTATIC) $(REALNAME)
 
 
 clean:
-	rm -f *.o *lib$(PROG)*
+	rm -f *.o *$(PROG)*
 
